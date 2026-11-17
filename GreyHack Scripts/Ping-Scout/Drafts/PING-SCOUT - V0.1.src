@@ -1,0 +1,177 @@
+
+// PING-SCOUT 0.1
+// PINGTOWER Software Arsenal
+//
+// Purpose:
+// Local system inventory and LAN reconnaissance.
+//
+// Source:
+// External-source GreyScript API documentation.
+//
+// Permissions:
+// Existing access to the executing computer and router.
+//
+// Mode:
+// Read-only.
+//
+// Status:
+// Draft - Not game-tested.
+
+// --------------------------------------------------
+// INITIALIZATION
+// --------------------------------------------------
+
+print("====================================")
+print("       PING-SCOUT 0.1")
+print("       PINGTOWER RECON")
+print("====================================")
+print("")
+
+shell = get_shell
+computer = shell.host_computer
+
+// --------------------------------------------------
+// LOCAL COMPUTER INFORMATION
+// --------------------------------------------------
+
+print("[ LOCAL SYSTEM ]")
+print("------------------------------")
+
+computerName = computer.get_name
+localAddress = computer.local_ip
+publicAddress = computer.public_ip
+gateway = computer.network_gateway
+networkStatus = computer.is_network_active
+networkCard = computer.active_net_card
+
+print("Hostname:")
+print(computerName)
+
+print("Local IP:")
+print(localAddress)
+
+print("Public IP:")
+print(publicAddress)
+
+print("Gateway:")
+print(gateway)
+
+print("Network Card:")
+print(networkCard)
+
+print("Internet Status:")
+if networkStatus == 1 then
+    print("Connected")
+else
+    print("Disconnected")
+end if
+
+print("")
+
+// --------------------------------------------------
+// LOCAL PORT INVENTORY
+// --------------------------------------------------
+
+print("[ LOCAL PORTS ]")
+print("------------------------------")
+
+localPorts = computer.get_ports
+
+if typeof(localPorts) == "list" then
+    for port in localPorts
+        print("Port:")
+        print(port.port_number)
+    end for
+else
+    print("Unable to retrieve local ports.")
+end if
+
+print("")
+
+// --------------------------------------------------
+// ROUTER INFORMATION
+// --------------------------------------------------
+
+print("[ ROUTER INFORMATION ]")
+print("------------------------------")
+
+router = get_router
+
+if typeof(router) == "router" then
+
+    print("Router Local IP:")
+    print(router.local_ip)
+
+    print("Router Public IP:")
+    print(router.public_ip)
+
+    print("Router Kernel Version:")
+    print(router.kernel_version)
+
+    print("")
+
+    // ----------------------------------------------
+    // LAN DEVICE DISCOVERY
+    // ----------------------------------------------
+
+    print("[ LAN DEVICES ]")
+    print("------------------------------")
+
+    devices = router.devices_lan_ip
+
+    if typeof(devices) == "list" then
+
+        print("Devices discovered:")
+        print(devices.len)
+
+        for deviceIP in devices
+
+            print("")
+            print("Device:")
+            print(deviceIP)
+
+            devicePorts = router.device_ports(deviceIP)
+
+            if typeof(devicePorts) == "list" then
+
+                print("Open Ports:")
+
+                for port in devicePorts
+
+                    print("Port Number:")
+                    print(port.port_number)
+
+                    serviceInfo = router.port_info(port)
+
+                    if typeof(serviceInfo) == "string" then
+                        print("Service:")
+                        print(serviceInfo)
+                    else
+                        print("Service information unavailable.")
+                    end if
+
+                end for
+
+            else
+                print("Port information unavailable.")
+            end if
+
+        end for
+
+    else
+        print("Unable to retrieve LAN device list.")
+    end if
+
+else
+    print("Router information unavailable.")
+end if
+
+// --------------------------------------------------
+// COMPLETION
+// --------------------------------------------------
+
+print("")
+print("====================================")
+print("     PING-SCOUT SCAN COMPLETE")
+print("====================================")
+print("End of report.")
