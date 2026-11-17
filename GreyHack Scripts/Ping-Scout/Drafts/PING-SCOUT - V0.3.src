@@ -1,0 +1,200 @@
+shell = get_shell
+computer = shell.host_computer
+router = get_router
+
+// ==========================================
+// COUNTERS
+// ==========================================
+
+localPortCount = 0
+deviceCount = 0
+openPortCount = 0
+devicesWithOpenPorts = 0
+devicesWithoutOpenPorts = 0
+unavailablePortScans = 0
+
+identifiedServiceCount = 0
+unavailableServiceCount = 0
+
+httpCount = 0
+ftpCount = 0
+sshCount = 0
+otherServiceCount = 0
+
+// ==========================================
+// LOCAL SYSTEM INFORMATION
+// ==========================================
+
+print("========================================")
+print("          PING-SCOUT 0.3")
+print("       NETWORK RECONNAISSANCE")
+print("========================================")
+print("")
+print("[ LOCAL SYSTEM ]")
+
+print("Hostname: " + computer.get_name)
+print("Local IP: " + computer.local_ip)
+print("Public IP: " + computer.public_ip)
+print("Gateway: " + computer.network_gateway)
+print("Network Card: " + computer.active_net_card)
+print("Internet Status: " + computer.is_network_active)
+print("")
+
+localPorts = computer.get_ports
+
+if typeof(localPorts) == "list" then
+    localPortCount = localPorts.len
+end if
+
+print("Active Local Ports: " + localPortCount)
+print("")
+
+// ==========================================
+// ROUTER INFORMATION
+// ==========================================
+
+print("[ ROUTER INFORMATION ]")
+
+print("Router Local IP: " + router.local_ip)
+print("Router Public IP: " + router.public_ip)
+print("Kernel Version: " + router.kernel_version)
+print("")
+
+// ==========================================
+// LAN DEVICE DISCOVERY
+// ==========================================
+
+devices = router.devices_lan_ip
+deviceCount = devices.len
+
+print("[ LAN DEVICE INVENTORY ]")
+print("Devices Discovered: " + deviceCount)
+print("")
+
+for ip in devices
+
+    print("----------------------------------------")
+    print("DEVICE: " + ip)
+
+    ports = router.device_ports(ip)
+
+    if typeof(ports) == "list" then
+
+        devicePortCount = ports.len
+
+        if devicePortCount > 0 then
+
+            devicesWithOpenPorts = devicesWithOpenPorts + 1
+
+            print("Open Ports: " + devicePortCount)
+
+            for port in ports
+
+                openPortCount = openPortCount + 1
+
+                portNumber = port.port_number
+                serviceInfo = router.port_info(portNumber)
+
+                print("")
+                print("  Port: " + portNumber)
+
+                if typeof(serviceInfo) == "string" then
+
+                    identifiedServiceCount = identifiedServiceCount + 1
+
+                    print("  Service: " + serviceInfo)
+
+                    // ----------------------------------
+                    // SERVICE CLASSIFICATION
+                    // ----------------------------------
+
+                    serviceLower = serviceInfo.lower
+
+                    if serviceLower.indexOf("http") >= 0 then
+
+                        httpCount = httpCount + 1
+
+                    else if serviceLower.indexOf("ftp") >= 0 then
+
+                        ftpCount = ftpCount + 1
+
+                    else if serviceLower.indexOf("ssh") >= 0 then
+
+                        sshCount = sshCount + 1
+
+                    else
+
+                        otherServiceCount = otherServiceCount + 1
+
+                    end if
+
+                else
+
+                    unavailableServiceCount = unavailableServiceCount + 1
+
+                    print("  Service: Unavailable")
+
+                end if
+
+            end for
+
+        else
+
+            devicesWithoutOpenPorts = devicesWithoutOpenPorts + 1
+
+            print("No Open Ports Reported")
+
+        end if
+
+    else
+
+        unavailablePortScans = unavailablePortScans + 1
+
+        print("Port Scan: Unavailable")
+
+    end if
+
+    print("")
+
+end for
+
+// ==========================================
+// NETWORK SCAN SUMMARY
+// ==========================================
+
+print("========================================")
+print("             SCAN SUMMARY")
+print("========================================")
+
+print("")
+print("[ NETWORK ]")
+
+print("LAN Devices Discovered: " + deviceCount)
+print("Devices With Open Ports: " + devicesWithOpenPorts)
+print("Devices Without Open Ports: " + devicesWithoutOpenPorts)
+print("Unavailable Port Scans: " + unavailablePortScans)
+
+print("")
+print("[ PORTS ]")
+
+print("Local Active Ports: " + localPortCount)
+print("Total LAN Open Ports: " + openPortCount)
+
+print("")
+print("[ SERVICE IDENTIFICATION ]")
+
+print("Identified Services: " + identifiedServiceCount)
+print("Unavailable Services: " + unavailableServiceCount)
+
+print("")
+print("[ SERVICE BREAKDOWN ]")
+
+print("HTTP Services: " + httpCount)
+print("FTP Services: " + ftpCount)
+print("SSH Services: " + sshCount)
+print("Other Services: " + otherServiceCount)
+
+print("")
+print("========================================")
+print("       PING-SCOUT 0.3 COMPLETE")
+print("========================================")
