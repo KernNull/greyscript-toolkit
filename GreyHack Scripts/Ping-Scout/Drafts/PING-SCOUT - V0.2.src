@@ -1,0 +1,259 @@
+
+// PING-SCOUT 0.2
+// PINGTOWER Software Arsenal
+//
+// Purpose:
+// Local system inventory and LAN reconnaissance.
+//
+// Source:
+// External-source GreyScript API documentation.
+// Existing API behavior verified through gameplay.
+//
+// Permissions:
+// Existing access to the executing computer and router.
+//
+// Mode:
+// Read-only.
+//
+// Status:
+// Draft - Awaiting runtime testing.
+
+// --------------------------------------------------
+// INITIALIZATION
+// --------------------------------------------------
+
+print("====================================")
+print("       PING-SCOUT 0.2")
+print("       PINGTOWER RECON")
+print("====================================")
+print("")
+
+shell = get_shell
+computer = shell.host_computer
+
+// Initialize report counters.
+
+localPortCount = 0
+deviceCount = 0
+openPortCount = 0
+devicesWithOpenPorts = 0
+devicesWithoutOpenPorts = 0
+unavailablePortScans = 0
+identifiedServiceCount = 0
+unavailableServiceCount = 0
+
+// --------------------------------------------------
+// LOCAL COMPUTER INFORMATION
+// --------------------------------------------------
+
+print("[ LOCAL SYSTEM ]")
+print("------------------------------")
+
+computerName = computer.get_name
+localAddress = computer.local_ip
+publicAddress = computer.public_ip
+gateway = computer.network_gateway
+networkStatus = computer.is_network_active
+networkCard = computer.active_net_card
+
+print("Hostname:")
+print(computerName)
+
+print("Local IP:")
+print(localAddress)
+
+print("Public IP:")
+print(publicAddress)
+
+print("Gateway:")
+print(gateway)
+
+print("Network Card:")
+print(networkCard)
+
+print("Internet Status:")
+if networkStatus == 1 then
+    print("Connected")
+else
+    print("Disconnected")
+end if
+
+print("")
+
+// --------------------------------------------------
+// LOCAL PORT INVENTORY
+// --------------------------------------------------
+
+print("[ LOCAL PORTS ]")
+print("------------------------------")
+
+localPorts = computer.get_ports
+
+if typeof(localPorts) == "list" then
+
+    for port in localPorts
+        localPortCount = localPortCount + 1
+
+        print("Port:")
+        print(port.port_number)
+    end for
+
+    print("Active Local Port Count:")
+    print(localPortCount)
+
+else
+    print("Unable to retrieve local ports.")
+end if
+
+print("")
+
+// --------------------------------------------------
+// ROUTER INFORMATION
+// --------------------------------------------------
+
+print("[ ROUTER INFORMATION ]")
+print("------------------------------")
+
+router = get_router
+
+if typeof(router) == "router" then
+
+    print("Router Local IP:")
+    print(router.local_ip)
+
+    print("Router Public IP:")
+    print(router.public_ip)
+
+    print("Router Kernel Version:")
+    print(router.kernel_version)
+
+    print("")
+
+    // ----------------------------------------------
+    // LAN DEVICE DISCOVERY
+    // ----------------------------------------------
+
+    print("[ LAN DEVICES ]")
+    print("------------------------------")
+
+    devices = router.devices_lan_ip
+
+    if typeof(devices) == "list" then
+
+        deviceCount = devices.len
+
+        print("Devices discovered:")
+        print(deviceCount)
+
+        for deviceIP in devices
+
+            print("")
+            print("Device:")
+            print(deviceIP)
+
+            devicePorts = router.device_ports(deviceIP)
+
+            if typeof(devicePorts) == "list" then
+
+                devicePortCount = 0
+
+                print("Open Ports:")
+
+                for port in devicePorts
+
+                    devicePortCount = devicePortCount + 1
+                    openPortCount = openPortCount + 1
+
+                    print("Port Number:")
+                    print(port.port_number)
+
+                    serviceInfo = router.port_info(port)
+
+                    if typeof(serviceInfo) == "string" then
+
+                        identifiedServiceCount = identifiedServiceCount + 1
+
+                        print("Service:")
+                        print(serviceInfo)
+
+                    else
+
+                        unavailableServiceCount = unavailableServiceCount + 1
+
+                        print("Service information unavailable.")
+
+                    end if
+
+                end for
+
+                if devicePortCount > 0 then
+                    devicesWithOpenPorts = devicesWithOpenPorts + 1
+                else
+                    devicesWithoutOpenPorts = devicesWithoutOpenPorts + 1
+                    print("No open ports reported.")
+                end if
+
+            else
+
+                unavailablePortScans = unavailablePortScans + 1
+
+                print("Port information unavailable.")
+
+            end if
+
+        end for
+
+    else
+
+        print("Unable to retrieve LAN device list.")
+
+    end if
+
+else
+
+    print("Router information unavailable.")
+
+end if
+
+// --------------------------------------------------
+// SCAN SUMMARY
+// --------------------------------------------------
+
+print("")
+print("====================================")
+print("          SCAN SUMMARY")
+print("====================================")
+
+print("LAN Devices Discovered:")
+print(deviceCount)
+
+print("Local Active Ports:")
+print(localPortCount)
+
+print("Total LAN Open Ports:")
+print(openPortCount)
+
+print("Devices With Open Ports:")
+print(devicesWithOpenPorts)
+
+print("Devices Without Open Ports:")
+print(devicesWithoutOpenPorts)
+
+print("Unavailable Port Scans:")
+print(unavailablePortScans)
+
+print("Identified Services:")
+print(identifiedServiceCount)
+
+print("Unavailable Service Identifications:")
+print(unavailableServiceCount)
+
+// --------------------------------------------------
+// COMPLETION
+// --------------------------------------------------
+
+print("")
+print("====================================")
+print("     PING-SCOUT SCAN COMPLETE")
+print("====================================")
+print("End of report.")
