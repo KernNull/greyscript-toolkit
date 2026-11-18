@@ -45,6 +45,34 @@ A version is not considered stable until it has undergone sufficient testing and
 
 ---
 
+## [0.3] — Runtime Verified
+
+### Added
+- Service classification counters:
+  - HTTP
+  - FTP
+  - SSH
+  - Other
+- Per-device service reporting.
+- Compact service breakdown in the scan summary.
+
+### Changed
+- Expanded the existing 0.2 scan summary with service-type statistics.
+- Retained all existing 0.2 counters and reporting.
+
+### Testing
+- Successfully compiled in Grey Hack.
+- Successfully executed from start to finish.
+- Discovered all 11 LAN devices.
+- Enumerated all 9 open ports.
+- No runtime errors observed.
+- Service identification returned `Unavailable` for all 9 ports.
+- Service classification remains unresolved and requires further investigation.
+
+### Known Issues
+- `router.port_info()` service identification worked in 0.2 but did not return usable service information in 0.3.
+- New string-based service classification has not yet been independently verified.
+
 ## [0.2] — Runtime Verified
 
 ### Added
