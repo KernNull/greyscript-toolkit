@@ -15,9 +15,9 @@ A version is not considered stable until it has undergone sufficient testing and
 ## [Unreleased]
 
 ### Planned
-- Improve service identification and classification.
-- Expand network reconnaissance and inventory reporting.
-- Improve output readability and scan summaries.
+- Add device-level service summaries.
+- Improve network inventory reporting and output readability.
+- Expand scan summaries where useful.
 - Strengthen error handling and reporting of unavailable information.
 - Continue prioritizing read-only operation and safe reconnaissance.
 
@@ -26,17 +26,20 @@ A version is not considered stable until it has undergone sufficient testing and
 ## [0.4] — Runtime Verified
 
 ### Fixed
-- Restored the original `router.port_info(port)` call using the port object rather than its numeric port number.
-- Restored successful service identification.
+- Restored the original `router.port_info(port)` call, passing the port object rather than its numeric port number.
+- Corrected the service-identification regression introduced in 0.3.
 
 ### Verified
-- Successful compilation and execution in Grey Hack.
-- Discovered 8 LAN devices.
-- Enumerated 9 open ports.
-- Identified all 9 services.
+- Successfully compiled and executed in Grey Hack.
+- Completed two consecutive successful runtime tests.
+- Discovered 8 LAN devices in both runs.
+- Enumerated 9 open ports in both runs.
+- Identified all 9 services in both runs.
 - Successfully classified HTTP, FTP, and SSH services.
 - Confirmed zero unavailable service identifications.
 - Confirmed zero unavailable port scans.
+- Both runs produced identical scan results.
+- No runtime errors observed.
 
 ### Service Breakdown
 - HTTP: 5
@@ -45,30 +48,9 @@ A version is not considered stable until it has undergone sufficient testing and
 - Other: 0
 
 ### Notes
-- LAN discovery results differed from previous runs.
-- No runtime errors observed.
-
----
-
-## [0.3] — In Development
-
-### Added
-- Service classification counters:
-  - HTTP
-  - FTP
-  - SSH
-  - Other
-- Per-device service reporting.
-- Compact service breakdown in the scan summary.
-
-### Changed
-- Expanded the existing 0.2 scan summary with service-type statistics.
-- Retained all existing 0.2 counters and reporting.
-
-### Testing
-- Draft prepared.
-- Runtime testing pending.
-- String classification using `lower` and `indexOf` requires in-game verification.
+- Service identification and string-based classification are now runtime verified.
+- Repeatability has been confirmed across two consecutive runs in the current PINGTOWER network environment.
+- Stable status has not yet been designated.
 
 ---
 
@@ -80,25 +62,29 @@ A version is not considered stable until it has undergone sufficient testing and
   - FTP
   - SSH
   - Other
-- Per-device service reporting.
-- Compact service breakdown in the scan summary.
+- Per-device port and service reporting.
+- Service breakdown in the scan summary.
 
 ### Changed
 - Expanded the existing 0.2 scan summary with service-type statistics.
-- Retained all existing 0.2 counters and reporting.
+- Retained the existing 0.2 counters and reporting.
 
 ### Testing
 - Successfully compiled in Grey Hack.
 - Successfully executed from start to finish.
-- Discovered all 11 LAN devices.
+- Discovered 11 LAN devices.
 - Enumerated all 9 open ports.
 - No runtime errors observed.
-- Service identification returned `Unavailable` for all 9 ports.
-- Service classification remains unresolved and requires further investigation.
 
 ### Known Issues
-- `router.port_info()` service identification worked in 0.2 but did not return usable service information in 0.3.
-- New string-based service classification has not yet been independently verified.
+- Service identification returned `Unavailable` for all 9 open ports.
+- The implementation passed the numeric port number to `router.port_info()` instead of the port object.
+- Service classification could not be meaningfully verified because service identification failed.
+
+### Resolution
+- The service-lookup regression was corrected in 0.4 by restoring the original port-object argument.
+
+---
 
 ## [0.2] — Runtime Verified
 
@@ -150,4 +136,6 @@ A version is not considered stable until it has undergone sufficient testing and
 - New GreyScript functionality must be verified in-game before being classified as game-tested.
 - Experimental versions belong in `Drafts/`.
 - The root `Ping-Scout/` directory is reserved for the finalized script and its supporting documentation.
-- Version history must reflect actual development and testing results. Do not label a version stable without sufficient testing.
+- Version history must reflect actual development and testing results.
+- Runtime verification does not automatically confer stable status.
+- No version may be designated stable without sufficient testing and explicit owner approval.
