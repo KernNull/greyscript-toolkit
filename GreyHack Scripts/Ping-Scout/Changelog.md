@@ -23,6 +23,33 @@ A version is not considered stable until it has undergone sufficient testing and
 
 ---
 
+## [0.4] — Runtime Verified
+
+### Fixed
+- Restored the original `router.port_info(port)` call using the port object rather than its numeric port number.
+- Restored successful service identification.
+
+### Verified
+- Successful compilation and execution in Grey Hack.
+- Discovered 8 LAN devices.
+- Enumerated 9 open ports.
+- Identified all 9 services.
+- Successfully classified HTTP, FTP, and SSH services.
+- Confirmed zero unavailable service identifications.
+- Confirmed zero unavailable port scans.
+
+### Service Breakdown
+- HTTP: 5
+- FTP: 2
+- SSH: 2
+- Other: 0
+
+### Notes
+- LAN discovery results differed from previous runs.
+- No runtime errors observed.
+
+---
+
 ## [0.3] — In Development
 
 ### Added
