@@ -1,0 +1,89 @@
+// TRACECHECK V1 — Read-Only Process, Active-Session & Log Awareness Utility
+// Usage: tracecheck
+
+if params.len > 0 then
+    if params[0] == "-h" or params[0] == "--help" then
+        print("Usage: tracecheck")
+        print("  Inspects active processes (flagging dsession) and /var/system.log readability.")
+        exit("")
+    end if
+end if
+
+shell = get_shell
+if not shell then exit("Error: Could not obtain shell.")
+comp = shell.host_computer
+if not comp then exit("Error: Could not obtain host_computer.")
+
+print("========================================")
+print("            TRACECHECK V1")
+print("========================================")
+print("Host: " + comp.get_name + " | Local: " + comp.local_ip + " | Public: " + comp.public_ip)
+print("")
+
+print("[ ACTIVE PROCESSES ]")
+procs = comp.show_procs
+if typeof(procs) != "string" or procs.len == 0 then
+    print("Process list: Unavailable")
+else
+    procLines = procs.split(char(10))
+    dsessions = []
+    for pLine in procLines
+        if pLine.trim.len == 0 then continue
+        print("  " + pLine)
+        if pLine.lower.indexOf("dsession") >= 0 then
+            dsessions.push(pLine.trim)
+        end if
+    end for
+
+    print("")
+    if dsessions.len > 0 then
+        print("[!] WARNING: " + dsessions.len + " active dsession(s) detected:")
+        for d in dsessions
+            print("    -> " + d)
+        end for
+    else
+        print("[OK] No dsession processes detected.")
+    end if
+end if
+print("")
+
+print("[ SYSTEM LOG (/var/system.log) ]")
+sysLog = comp.File("/var/system.log")
+if not sysLog then
+    print("/var/system.log not found or inaccessible.")
+else
+    print("Owner: " + sysLog.owner + " | Size: " + sysLog.size + " bytes")
+    content = sysLog.get_content
+    if typeof(content) == "string" then
+        logLines = content.split(char(10))
+        print("Readable: YES (" + logLines.len + " lines)")
+        startIdx = 0
+        if logLines.len > 10 then startIdx = logLines.len - 10
+        print("Last entries:")
+        i = startIdx
+        while i < logLines.len
+            if logLines[i].trim.len > 0 then
+                print("  " + logLines[i])
+            end if
+            i = i + 1
+        end while
+    else
+        print("Readable: NO (insufficient permissions at current privilege level)")
+    end if
+end if
+
+txLog = comp.File("/server/transactions.log")
+if txLog then
+    print("")
+    print("[ BANK TRANSACTIONS LOG (/server/transactions.log) ]")
+    print("Owner: " + txLog.owner + " | Size: " + txLog.size + " bytes")
+    txContent = txLog.get_content
+    if typeof(txContent) == "string" then
+        print("Readable: YES")
+    else
+        print("Readable: NO")
+    end if
+end if
+
+print("")
+print("========================================")
