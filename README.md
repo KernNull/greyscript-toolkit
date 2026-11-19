@@ -12,8 +12,8 @@ I'm building these scripts as I play and learn the game, and I'm sharing them pu
 
 | Script | Description | Status | Guide |
 |---|---|---|---|
-| **PING-SCOUT** | Read-only network, router, firewall, and LAN reconnaissance tool | `0.5` — Stable (Game-Tested) | [Ping-Scout README](GreyHack%20Scripts/Ping-Scout/README.md) |
-| **Scanhttp** | `metaxploit.so` vulnerability scanner (`SCAN-HTTP`) and overflow tester (`TEST-HTTP`) | `0.1` — Prototype (Game-Tested) | [Scanhttp README](GreyHack%20Scripts/Scanhttp/README.md) |
+| **pingscout** | Read-only network, router, firewall, and LAN reconnaissance tool | `V5` — Stable (Game-Tested) | [pingscout README](GreyHack%20Scripts/pingscout/README.md) |
+| **libscan** | Parameterized `metaxploit.so` vulnerability scanner & overflow runner | `V3` — Game-Tested (Read-Only Parser) | [libscan README](GreyHack%20Scripts/libscan/README.md) |
 
 Each script folder includes a plain-English `README.md`, a `Changelog.md`, and a `Drafts/` folder showing how the script evolved.
 

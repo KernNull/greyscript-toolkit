@@ -1,26 +1,26 @@
-# PING-SCOUT
+# pingscout
 
 **What is it?**  
-`PING-SCOUT` is a **read-only network reconnaissance tool** for Grey Hack. Think of it as an all-in-one "look around the network" utility: it inspects your own computer, your router (or a target IP's router), any forwarded ports, firewall rules, and every device on the local network — without attacking or changing anything.
+`pingscout` is a **read-only network reconnaissance tool** for Grey Hack. Think of it as an all-in-one "look around the network" utility: it inspects your own computer, your router (or a target IP's router), any forwarded ports, firewall rules, and every device on the local network — without attacking or changing anything.
 
 ---
 
 ## Is It Safe to Run?
-Yes. `PING-SCOUT` only **reads** publicly/locally available network info. It does **not** log into machines, run exploits, or edit files.
+Yes. `pingscout` only **reads** publicly/locally available network info. It does **not** log into machines, run exploits, or edit files.
 
 ---
 
 ## Requirements
 - No extra libraries required (works on a standard Grey Hack computer).
-- Latest version: `PING-SCOUT.src` (`0.5 — Game-Tested`; draft history in `Drafts/`).
+- Latest version: `pingscout.src` (`V5 — Stable / Game-Tested`; draft history `V1`–`V5` in `Drafts/`).
 
 ---
 
 ## How to Build & Run (In-Game)
-1. Copy `PING-SCOUT.src` into your Grey Hack computer (for example, `/home/YourUser/src/PingScout.src`).
+1. Copy `pingscout.src` into your Grey Hack computer (for example, `/home/YourUser/src/pingscout.src`).
 2. Compile it in Terminal (for example, as `/bin/pingscout` or `/usr/bin/pingscout`):
    ```text
-   build /home/YourUser/src/PingScout.src /bin
+   build /home/YourUser/src/pingscout.src /bin
    ```
 3. Run it:
    - **Check your own network:**

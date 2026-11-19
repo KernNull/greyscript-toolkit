@@ -1,8 +1,8 @@
-# PING-SCOUT — Changelog
+# pingscout — Changelog
 
-All notable changes to PING-SCOUT are documented in this file.
+All notable changes to `pingscout` are documented in this file.
 
-PING-SCOUT is a read-only Grey Hack reconnaissance and network-inventory utility developed for the PINGTOWER system.
+`pingscout` is a read-only Grey Hack reconnaissance and network-inventory utility developed for the PINGTOWER system.
 
 Development follows the progression:
 
@@ -16,11 +16,10 @@ A version is not considered stable until it has undergone sufficient testing and
 
 ### Planned
 - Evaluate optional output filtering or compact mode if needed.
-- Await owner approval before designating `0.5` as `Stable`.
 
 ---
 
-## [0.5] — Game-Tested
+## [V5] — Stable (Owner-Approved / Game-Tested)
 
 ### Added
 - Optional `target_ip` CLI parameter (`ping-scout [target_ip]`) to scout a remote router and its LAN without modifying anything (`External-source` API behavior pending in-game verification).
@@ -37,15 +36,15 @@ A version is not considered stable until it has undergone sufficient testing and
 ### Verified (Grey Hack `v0.9.7398 - BETA`)
 - **Local mode (`pingscout`):** Compiled and ran cleanly; enumerated local system info, router `192.168.0.1` (`ESSID`/`BSSID`), 3 forwarded ports, firewall rules, and 10 LAN devices (`5` open ports, `10` closed ports, `15` identified services, `0` unavailable).
 - **Remote mode (`pingscout <target_ip>`):** Compiled and ran cleanly; enumerated remote router kernel, `ESSID`/`BSSID`, forwarded port `80 [OPEN]`, firewall rules, and 8 LAN devices (`1` open port, `3` closed ports, `4` identified services, `0` unavailable).
-- Promoted to root `PING-SCOUT.src` (`Game-Tested`; `Stable` designation awaits explicit owner approval).
+- Promoted to root `pingscout.src` (`V5` — `Stable`, owner-approved).
 
 ---
 
-## [0.4] — Runtime Verified
+## [V4] — Runtime Verified
 
 ### Fixed
 - Restored the original `router.port_info(port)` call, passing the port object rather than its numeric port number.
-- Corrected the service-identification regression introduced in 0.3.
+- Corrected the service-identification regression introduced in `V3`.
 
 ### Verified
 - Successfully compiled and executed in Grey Hack.
@@ -72,7 +71,7 @@ A version is not considered stable until it has undergone sufficient testing and
 
 ---
 
-## [0.3] — Runtime Verified
+## [V3] — Runtime Verified
 
 ### Added
 - Service classification counters:
@@ -84,8 +83,8 @@ A version is not considered stable until it has undergone sufficient testing and
 - Service breakdown in the scan summary.
 
 ### Changed
-- Expanded the existing 0.2 scan summary with service-type statistics.
-- Retained the existing 0.2 counters and reporting.
+- Expanded the existing `V2` scan summary with service-type statistics.
+- Retained the existing `V2` counters and reporting.
 
 ### Testing
 - Successfully compiled in Grey Hack.
@@ -100,11 +99,11 @@ A version is not considered stable until it has undergone sufficient testing and
 - Service classification could not be meaningfully verified because service identification failed.
 
 ### Resolution
-- The service-lookup regression was corrected in 0.4 by restoring the original port-object argument.
+- The service-lookup regression was corrected in `V4` by restoring the original port-object argument.
 
 ---
 
-## [0.2] — Runtime Verified
+## [V2] — Runtime Verified
 
 ### Added
 - Scan summary with numerical counters.
@@ -127,7 +126,7 @@ A version is not considered stable until it has undergone sufficient testing and
 
 ---
 
-## [0.1] — Initial Working Version
+## [V1] — Initial Working Version
 
 ### Added
 - Initial PING-SCOUT reconnaissance utility.
@@ -153,7 +152,7 @@ A version is not considered stable until it has undergone sufficient testing and
 - Unavailable information must be distinguished from confirmed negative results.
 - New GreyScript functionality must be verified in-game before being classified as game-tested.
 - Experimental versions belong in `Drafts/`.
-- The root `Ping-Scout/` directory is reserved for the finalized script and its supporting documentation.
+- The root `pingscout/` directory is reserved for the finalized script and its supporting documentation.
 - Version history must reflect actual development and testing results.
 - Runtime verification does not automatically confer stable status.
 - No version may be designated stable without sufficient testing and explicit owner approval.

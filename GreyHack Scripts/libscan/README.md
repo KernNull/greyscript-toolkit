@@ -1,4 +1,4 @@
-# Scanhttp / `libscan`
+# libscan
 
 **What is it?**  
 This folder contains GreyScript utilities that use **`metaxploit.so`** to inspect a remote service or router kernel for vulnerabilities and test whether any of them grant access (such as a remote shell).
@@ -8,11 +8,11 @@ Instead of buying individual one-off exploits from Hackshop, `libscan` lets you 
 ---
 
 ## Evolution & Files
-1. **`Drafts/SCAN-HTTP - V0.1.src` & `Drafts/TEST-HTTP - V0.1.src`** *(v0.1 — Hardcoded Prototypes)*  
+1. **`Drafts/scanhttp - V1.src` & `Drafts/testhttp - V1.src`** *(V1 — Hardcoded Prototypes)*  
    - Initial proof-of-concept scripts that scanned `libhttp.so` on port `80` and tested zero-prerequisite `overflow` calls.
-2. **`v0.2` (`libscan`, `Game-Tested`)**  
+2. **`Drafts/libscan - V2.src`** *(V2 — `Game-Tested`)*  
    - Parameterized to accept `<ip> [port]` from the command line (defaulting to port `0` for router kernel scans), removing all hardcoded IPs.
-3. **`v0.3` (`libscan`, `Draft — Pending In-Game Test`)**  
+3. **`Drafts/libscan - V3.src`** *(V3 — `Game-Tested` Read-Only Parser)*  
    - Automatically parses `scan_address` output into a clean numbered menu of `(address, value, requirements)`.
    - Prompts you to either press **Enter** (safe read-only exit) or pick a number (with an optional extra argument) to run `metaLib.overflow(...)` and open a `shell` if obtained.
 

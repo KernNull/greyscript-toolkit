@@ -1,6 +1,6 @@
-# SCAN-HTTP — Changelog
+# libscan — Changelog
 
-All notable changes to the `Scanhttp` scripts (`SCAN-HTTP` and `TEST-HTTP`) are documented in this file.
+All notable changes to the `libscan` scripts (including `V1` prototypes `scanhttp` and `testhttp`) are documented in this file.
 
 Development follows the progression:
 
@@ -12,11 +12,11 @@ Development follows the progression:
 
 ### Planned
 - Test interactive `overflow` selection in-game on a target service.
-- Promote `0.3` to root `LIBSCAN.src` once interactive `overflow` is verified.
+- Promote `V3` to root `libscan.src` once interactive `overflow` is verified.
 
 ---
 
-## [0.3] — Game-Tested (Read-Only Parser Verified)
+## [V3] — Game-Tested (Read-Only Parser Verified)
 
 ### Added
 - Automatic `scan_address` parser: strips `<b>` tags, extracts `(address, value, requirements)` tuples, and prints a numbered menu.
@@ -30,7 +30,7 @@ Development follows the progression:
 
 ---
 
-## [0.2] — Game-Tested (`/bin/libscan`)
+## [V2] — Game-Tested (`/bin/libscan`)
 
 ### Added
 - Parameterized CLI arguments: `<ip> [port]` (defaulting `port` to `0` for router kernel scanning when omitted) plus `-h` / `--help` usage output.
@@ -46,16 +46,16 @@ Development follows the progression:
 
 ---
 
-## [0.1] — Game-Tested (Hardcoded Prototype)
+## [V1] — Game-Tested (Hardcoded Prototype)
 
 ### Added
-- `Drafts/SCAN-HTTP - V0.1.src`: Connects via `metaxploit.net_use`, dumps the remote library (`dump_lib`), enumerates vulnerable memory addresses (`scan`), and prints vulnerability details (`scan_address`).
-- `Drafts/TEST-HTTP - V0.1.src`: Tests zero-prerequisite `libhttp.so` `v1.1.3` overflow payloads (`0x6BA50096`, `0x60221C11`, `0xA20F5B6`), prints each returned object type (`typeof(res)`), and launches `res.start_terminal` when a `shell` is obtained.
+- `Drafts/scanhttp - V1.src`: Connects via `metaxploit.net_use`, dumps the remote library (`dump_lib`), enumerates vulnerable memory addresses (`scan`), and prints vulnerability details (`scan_address`).
+- `Drafts/testhttp - V1.src`: Tests zero-prerequisite `libhttp.so` `v1.1.3` overflow payloads (`0x6BA50096`, `0x60221C11`, `0xA20F5B6`), prints each returned object type (`typeof(res)`), and launches `res.start_terminal` when a `shell` is obtained.
 
 ### Verified
 - Executed in Grey Hack `v0.9.7398 - BETA` against a target HTTP service on port `80` (`libhttp.so` `v1.1.3`).
-- `SCAN-HTTP - V0.1.src` discovered 6 vulnerable memory addresses.
-- `TEST-HTTP - V0.1.src` confirmed:
+- `scanhttp - V1.src` discovered 6 vulnerable memory addresses.
+- `testhttp - V1.src` confirmed:
   - `0x6BA50096` (`ositializedelembofa`) → `computer` (`guest`)
   - `0x60221C11` (`siintln`) → `file` (`guest`)
   - `0xA20F5B6` (`elendpointln`) → `shell` (`guest`)
