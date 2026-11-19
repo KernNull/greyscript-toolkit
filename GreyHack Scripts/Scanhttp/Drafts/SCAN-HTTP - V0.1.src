@@ -1,0 +1,18 @@
+metax = include_lib("/lib/metaxploit.so")
+if not metax then exit("Error: metaexploit.so not found")
+
+netSession = metax.net_use("136.130.102.158", 80)
+if not netSession then exit("Error: Can't connect to net session")
+
+metaLib = netSession.dump_lib
+if not metaLib then exit("Error: Can't dump library")
+
+print("Library: " + metaLib.lib_name + " v" + metaLib.version)
+
+addresses = metax.scan(metaLib)
+if not addresses then exit("No vunerabilities found.")
+
+for address in addresses
+  print("=== Address: " + address + " ===")
+  print(metax.scan_address(metaLib, address))
+end for

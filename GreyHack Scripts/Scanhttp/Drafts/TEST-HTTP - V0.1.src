@@ -1,0 +1,24 @@
+metax = include_lib("/lib/metaxploit.so")
+if not metax then exit("Error: metaxploit.so not found")
+
+netSession = metax.net_use("136.130.102.158", 80)
+if not netSession then exit("Error: Can't connect to net session")
+
+metaLib = netSession.dump_lib
+if not metaLib then exit("Error: Can't dump library")
+
+targets = []
+targets.push(["0x6BA50096", "ositializedelembofa"])
+targets.push(["0x60221C11", "siintln"])
+targets.push(["0xA20F5B6", "elendpointln"])
+
+for t in targets
+    addr = t[0]
+    val = t[1]
+    res = metaLib.overflow(addr, val)
+    print(addr + " (" + val + ") -> " + typeof(res))
+    if typeof(res) == "shell" then
+        print("Shell obtained! Launching terminal...")
+        res.start_terminal
+    end if
+end for
