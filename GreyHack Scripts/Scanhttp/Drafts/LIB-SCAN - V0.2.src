@@ -1,0 +1,36 @@
+// SCAN-LIB 0.2 - Parameterized metaxploit.so Library Scanner
+// Usage: scanlib_custom <ip> [port] (omit port or use 0 for router kernel)
+
+  if params.len < 1 or params[0] == "-h" or params[0] == "--help" then
+    print("Usage: scan-lib <ip> [port]")
+    print("   ip    : Target IP address")
+    print("   port  : Target port (default: 0 for router kernal)")
+    exit("")
+  end if
+
+  metax = include_lib("/lib/metaxploit.so")
+  if not metax then exit("Error: /lib/metaexploit.so not found")
+
+  ip = params[0]
+  port = 0
+  if params.len >= 2 then
+    port = params[1].to_int
+    if typeof(port) != "number" then exit("Error: Port must be a number")
+  end if
+
+  netSession = metax.net_use(ip, port)
+  if not netSession then exit("Error: Can't connect to " + ip + ":" + port)
+
+  metaLib = netSession.dump_lib
+  if not metaLib then exit("Error: Can't dump library")
+
+  print("Target: " + ip + ":" + port)
+  print("Library: " + metaLib.lib_name + " v" + metaLib.version)
+
+  addresses = metax.scan(metaLib)
+  if not addresses or addresses.len == 0 then exit("No vunerabilites found.")
+
+  for address in addresses
+    print("=== Address: " + address + " ===")
+    print(metax.scan_address(metaLib, address))
+  end for
