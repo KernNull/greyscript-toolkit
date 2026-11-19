@@ -15,11 +15,29 @@ A version is not considered stable until it has undergone sufficient testing and
 ## [Unreleased]
 
 ### Planned
-- Add device-level service summaries.
-- Improve network inventory reporting and output readability.
-- Expand scan summaries where useful.
-- Strengthen error handling and reporting of unavailable information.
-- Continue prioritizing read-only operation and safe reconnaissance.
+- Evaluate optional output filtering or compact mode if needed.
+- Await owner approval before designating `0.5` as `Stable`.
+
+---
+
+## [0.5] — Game-Tested
+
+### Added
+- Optional `target_ip` CLI parameter (`ping-scout [target_ip]`) to scout a remote router and its LAN without modifying anything (`External-source` API behavior pending in-game verification).
+- `-h` / `--help` usage output.
+- Router forwarded/used ports section (`router.used_ports`) showing port number, `OPEN`/`CLOSED` state, target LAN IP (`port.get_lan_ip`), and service info.
+- Router firewall rules section (`router.firewall_rules`).
+- Router `ESSID` and `BSSID` reporting when present.
+- `OPEN` vs. `CLOSED` port state tracking (`closedPortCount` separated from `openPortCount`).
+
+### Improved
+- Added null and `typeof()` guards for `get_shell`, `host_computer`, `get_router`, `used_ports`, `firewall_rules`, and `devices_lan_ip` to prevent runtime crashes.
+- Compacted per-port output to one line (`<port> [<state>] -> <service>`) for cleaner readability.
+
+### Verified (Grey Hack `v0.9.7398 - BETA`)
+- **Local mode (`pingscout`):** Compiled and ran cleanly; enumerated local system info, router `192.168.0.1` (`ESSID`/`BSSID`), 3 forwarded ports, firewall rules, and 10 LAN devices (`5` open ports, `10` closed ports, `15` identified services, `0` unavailable).
+- **Remote mode (`pingscout <target_ip>`):** Compiled and ran cleanly; enumerated remote router kernel, `ESSID`/`BSSID`, forwarded port `80 [OPEN]`, firewall rules, and 8 LAN devices (`1` open port, `3` closed ports, `4` identified services, `0` unavailable).
+- Promoted to root `PING-SCOUT.src` (`Game-Tested`; `Stable` designation awaits explicit owner approval).
 
 ---
 
