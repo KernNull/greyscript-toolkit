@@ -1,0 +1,105 @@
+// LOCALSCAN 0.1 — Local .so Library Scanner & Privilege Escalation Runner
+// Usage: localscan [path_to_lib]  (default: /lib/init.so)
+
+if params.len > 0 then
+    if params[0] == "-h" or params[0] == "--help" then
+        print("Usage: localscan [path_to_lib]")
+        print("  path_to_lib : Local .so path (default: /lib/init.so)")
+        exit("")
+    end if
+end if
+
+shell = get_shell
+if not shell then exit("Error: Could not obtain shell.")
+comp = shell.host_computer
+if not comp then exit("Error: Could not obtain host_computer.")
+
+metax = include_lib("/lib/metaxploit.so")
+if not metax then
+    metax = include_lib(current_path + "/metaxploit.so")
+end if
+if not metax then exit("Error: metaxploit.so not found in /lib or current directory.")
+
+libPath = "/lib/init.so"
+if params.len > 0 then libPath = params[0]
+
+metaLib = metax.load(libPath)
+if not metaLib then exit("Error: Could not load " + libPath)
+
+print("Local Target: " + comp.get_name + " (" + libPath + ")")
+print("Library: " + metaLib.lib_name + " v" + metaLib.version)
+
+addresses = metax.scan(metaLib)
+if not addresses or addresses.len == 0 then exit("No vulnerabilities found.")
+
+vulns = []
+
+for addr in addresses
+    raw = metax.scan_address(metaLib, addr)
+    if typeof(raw) != "string" then continue
+
+    clean = raw.replace("<b>", "").replace("</b>", "")
+    lines = clean.split(char(10))
+
+    currentVal = ""
+    currentReqs = []
+
+    for line in lines
+        lineTrim = line.trim
+        if lineTrim.indexOf("Unsafe check:") == 0 then
+            if currentVal.len > 0 then
+                vulns.push([addr, currentVal, currentReqs.join("; ")])
+                currentVal = ""
+                currentReqs = []
+            end if
+
+            endIdx = lineTrim.indexOf(". Buffer overflow.")
+            if endIdx > 0 then
+                parts = lineTrim[0 : endIdx].split(" ")
+                if parts.len > 0 then currentVal = parts[-1]
+            end if
+        else if lineTrim.indexOf("* ") == 0 and currentVal.len > 0 then
+            currentReqs.push(lineTrim[2 : ])
+        end if
+    end for
+
+    if currentVal.len > 0 then
+        vulns.push([addr, currentVal, currentReqs.join("; ")])
+    end if
+end for
+
+if vulns.len == 0 then exit("No parseable vulnerabilities found.")
+
+print("")
+print("=== PARSED VULNERABILITIES (" + vulns.len + ") ===")
+idx = 1
+for v in vulns
+    reqText = v[2]
+    if reqText.len == 0 then reqText = "None"
+    print("[" + idx + "] " + v[0] + " | " + v[1] + " | Reqs: " + reqText)
+    idx = idx + 1
+end for
+
+print("")
+choice = user_input("Select # to overflow (or press Enter to exit): ").trim
+if choice.len == 0 then exit("Done (read-only scan).")
+
+pick = choice.to_int
+if typeof(pick) != "number" or pick < 1 or pick > vulns.len then
+    exit("Invalid selection.")
+end if
+
+selected = vulns[pick - 1]
+extra = user_input("Optional extra arg (or Enter for none): ").trim
+
+if extra.len > 0 then
+    res = metaLib.overflow(selected[0], selected[1], extra)
+else
+    res = metaLib.overflow(selected[0], selected[1])
+end if
+
+print(selected[0] + " (" + selected[1] + ") -> " + typeof(res))
+if typeof(res) == "shell" then
+    print("Shell obtained! Launching terminal...")
+    res.start_terminal
+end if
