@@ -1,7 +1,7 @@
 metax = include_lib("/lib/metaxploit.so")
 if not metax then exit("Error: metaxploit.so not found")
 
-netSession = metax.net_use("136.130.102.158", 80)
+netSession = metax.net_use("<target_ip>", 80)
 if not netSession then exit("Error: Can't connect to net session")
 
 metaLib = netSession.dump_lib
